@@ -11,7 +11,7 @@
 
 
 int main(int argc, char* argv[]) {
-
+    std::cout << "Excution begin" << std::endl;
     my::IrisLandmark irisLandmarker("./models");
     cv::VideoCapture cap(0);
 
@@ -40,21 +40,18 @@ int main(int argc, char* argv[]) {
         #if SHOW_FPS
             auto start = std::chrono::high_resolution_clock::now();
         #endif
-
         irisLandmarker.loadImageToInput(rframe);
-        irisLandmarker.runInference();
-
-        for (auto landmark: irisLandmarker.getAllFaceLandmarks()) {
+        irisLandmarker.process();
+        float* output = irisLandmarker.getOutputData(0);
+        for (int i = 0; i <= sizeof(output); i++)
+        { 
+            std::cout << "x:" << output[0] << " y:" << output[1] << "z:" << output[2] << std::endl;
+        }
+        for (auto landmark: irisLandmarker.getAllHandLandmarks()) {
             cv::circle(rframe, landmark, 2, cv::Scalar(0, 255, 0), -1);
         }       
 
-        for (auto landmark: irisLandmarker.getAllEyeLandmarks(true, true)) {
-            cv::circle(rframe, landmark, 2, cv::Scalar(0, 0, 255), -1);
-        }
-
-        for (auto landmark: irisLandmarker.getAllEyeLandmarks(false, true)) {
-            cv::circle(rframe, landmark, 2, cv::Scalar(0, 0, 255), -1);
-        }
+  
 
         #if SHOW_FPS
             auto stop = std::chrono::high_resolution_clock::now();
@@ -79,5 +76,6 @@ int main(int argc, char* argv[]) {
 
     cap.release();
     cv::destroyAllWindows();
+    std::cout << "Excution finished"<< std::endl;
     return 0;
 }
