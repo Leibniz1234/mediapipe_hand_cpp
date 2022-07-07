@@ -10,13 +10,13 @@ namespace my {
     A model wrapper to use Mediapipe Face Detector.
     This class is non-copyable.
     */
-    class FaceDetection : public my::ModelLoader {
+    class HandDetection : public my::ModelLoader {
         public:
             /*
             Users MUST provide the FOLDER contain face_detection_short.tflite, NOT THE FILE itself.
             */
-            FaceDetection(std::string modelPath);
-            virtual ~FaceDetection() = default;
+            HandDetection(std::string modelPath);
+            virtual ~HandDetection() = default;
 
             /*
             Get access to original input image
@@ -49,7 +49,7 @@ namespace my {
             Override function from ModelLoader.
             Can only run when all input tensors have been loaded.
             */
-            virtual void runInference();
+            virtual void process();
 
             /*
             Crop input frame at roi (padding if need)

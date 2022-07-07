@@ -1,19 +1,19 @@
 #include "FaceDetection.hpp"
 
 
-my::FaceDetection::FaceDetection(std::string modelDir) :
-    my::ModelLoader(modelDir + std::string("/face_detection_short.tflite")) 
+my::HandDetection::HandDetection(std::string modelDir) :
+    my::ModelLoader(modelDir + std::string("/hand_landmark_full.tflite")) 
 {}
 
 
-void my::FaceDetection::loadImageToInput(const cv::Mat& in, int index) {
+void my::HandDetection::loadImageToInput(const cv::Mat& in, int index) {
     m_originImage = in;
     ModelLoader::loadImageToInput(in);
 }
 
 
-void my::FaceDetection::runInference() {
-    ModelLoader::runInference();
+void my::HandDetection::process() {
+    ModelLoader::process();
 
     auto regressor = getFaceRegressor();
     auto classificator = getFaceClassificator();
@@ -31,27 +31,27 @@ void my::FaceDetection::runInference() {
 }
 
 
-cv::Mat my::FaceDetection::getOriginalImage() const {
+cv::Mat my::HandDetection::getOriginalImage() const {
     return m_originImage;
 }
 
 
-std::vector<float> my::FaceDetection::getFaceRegressor() const {
+std::vector<float> my::HandDetection::getFaceRegressor() const {
     return ModelLoader::loadOutput(0);
 }
 
 
-std::vector<float> my::FaceDetection::getFaceClassificator() const {
+std::vector<float> my::HandDetection::getFaceClassificator() const {
     return ModelLoader::loadOutput(1);
 }
 
 
-cv::Rect my::FaceDetection::getFaceRoi() const {
+cv::Rect my::HandDetection::getFaceRoi() const {
     return m_roi;
 }
 
 
-cv::Mat my::FaceDetection::cropFrame(const cv::Rect& roi) const {
+cv::Mat my::HandDetection::cropFrame(const cv::Rect& roi) const {
     cv::Mat frame = getOriginalImage();
     cv::Size originalSize(roi.size());
 
@@ -86,7 +86,7 @@ cv::Mat my::FaceDetection::cropFrame(const cv::Rect& roi) const {
 
 //-------------------Private methods start here-------------------
 
-cv::Rect my::FaceDetection::calculateRoiFromDetection(const Detection& detection) const {
+cv::Rect my::HandDetection::calculateRoiFromDetection(const Detection& detection) const {
     int origWidth = m_originImage.size().width;
     int origHeight = m_originImage.size().height;
     
