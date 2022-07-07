@@ -29,15 +29,15 @@ bool __isIrisIndexValid(int idx) {
 
 
 my::IrisLandmark::IrisLandmark(std::string modelPath):
-    FaceLandmark(modelPath),
+    HandLandmark(modelPath),
     m_leftIrisLandmarker(modelPath + std::string("/iris_landmark.tflite")),
     m_rightIrisLandmarker(modelPath + std::string("/iris_landmark.tflite"))
     {}
 
 
-void my::IrisLandmark::runInference() {
-    FaceLandmark::runInference();
-    auto roi = FaceDetection::getFaceRoi();
+void my::IrisLandmark::process() {
+    HandLandmark::process();
+    auto roi = HandDetection::getFaceRoi();
     if (roi.empty()) return;
 
     std::thread t([this]() {this->runEyeInference(true);});
@@ -64,7 +64,7 @@ cv::Point my::IrisLandmark::getEyeLandmarkAt(int index, bool isLeftEye, bool isI
 
 
 std::vector<cv::Point> my::IrisLandmark::getAllEyeLandmarks(bool isLeftEye, bool isIris) const {
-    if (my::FaceDetection::getFaceRoi().empty())
+    if (my::HandDetection::getFaceRoi().empty())
         return std::vector<cv::Point>();
 
     int n = isIris ? IRIS_LANDMARKS : EYE_LANDMARKS;
@@ -108,12 +108,12 @@ void my::IrisLandmark::runEyeInference(bool isLeftEye) {
     auto roi = isLeftEye ? &m_leftEyeRoi: &m_rightEyeRoi;
     auto model = isLeftEye ? &m_leftIrisLandmarker: &m_rightIrisLandmarker;
 
-    auto pt1 = FaceLandmark::getFaceLandmarkAt(idx1);
-    auto pt2 = FaceLandmark::getFaceLandmarkAt(idx2);
+    auto pt1 = HandLandmark::getHandLandmarkAt(idx1);
+    auto pt2 = HandLandmark::getHandLandmarkAt(idx2);
 
     *roi = calculateEyeRoi(pt1, pt2);
-    auto eyePatch = FaceDetection::cropFrame(*roi);
+    auto eyePatch = HandDetection::cropFrame(*roi);
 
     model->loadImageToInput(eyePatch);
-    model->runInference();
+    model->process();
 }

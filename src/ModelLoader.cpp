@@ -94,7 +94,7 @@ void my::ModelLoader::loadBytesToInput(const void* data, int idx) {
 }
 
 
-void my::ModelLoader::runInference() {
+void my::ModelLoader::process() {
     inputChecker();
     m_interpreter->Invoke(); // Tflite inference
 }

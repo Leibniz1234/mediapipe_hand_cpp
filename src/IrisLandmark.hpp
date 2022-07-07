@@ -6,21 +6,11 @@
 
 namespace my {
     /*
-    const std::bitset<468> eyeAnnotations("000000010000000000000011111111110100000000\
-    000000000000001000000000000000000000000000000000000000000000000000001111000111110\
-    000001010010000000001110000000111011111010000000001000000000000000110000000000000\
-    000000000000000001111110111111000000000111110100111111111101000000000000000000000\
-    010000000000000000000000000000000000000000000000000000111100011111000000101001000\
-    000000111000001110111110100000001000000000000001100000000000000000000000000111111\
-    011111100000000011111");
-    */
-
-    /*
     A model wrapper to use Mediapipe Iris Landmark.
     It includes the face detection and face landmark phases.  
     This class is non-copyable.
     */
-    class IrisLandmark: public my::FaceLandmark {
+    class IrisLandmark: public my::HandLandmark {
         public:
             /*
             Users MUST provide the FOLDER contain ALL the face_detection_short.tflite, 
@@ -32,7 +22,7 @@ namespace my {
             /*
             Override function from FaceLandmark
             */
-            virtual void runInference();
+            virtual void process();
 
             /*
             Get an eye/iris landmark from output.

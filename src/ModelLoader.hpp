@@ -117,10 +117,10 @@ namespace my {
             virtual void loadBytesToInput(const void* data, int index = 0);
 
             /*
-            Run inference on the inputs.
+            Process the input.
             Can only run when all input tensors have been loaded.
             */
-            virtual void runInference();
+            virtual void process();
 
             /*
             A vector contains output data at index.
